@@ -29,7 +29,7 @@ You can get your user_id and group_id by getting information with `-l`.
 If you need an access token, head to http://dev.groupme.com.
 
 ## Installation
-If you're on a mac, head to the Downloads section and grab a binary.
+If you're on a mac, [download the binary here](http://static.adit.io/downloads/groupme/groupme-0.0.1-MacOSX.zip).
 
 ## Building from source
 
