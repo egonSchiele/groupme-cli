@@ -4,6 +4,8 @@ A command line interface to GroupMe.
 
 ## Screenshots
 
+![](http://static.adit.io/images/groupme1.png)
+![](http://static.adit.io/images/groupme2.png)
 
 ## Advantages
 - loads 100 messages at the start instead of 20, better for catching up and context
