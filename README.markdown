@@ -40,3 +40,10 @@ Then:
     cabal install groupme.cabal
 
 Pull requests welcome...if you want a feature added, send me a pull request!
+
+## Notifications
+
+Notifications are only available on Mac OS X 10.8+ for now.
+To enable notifications, you need the `terminal-notifier` gem:
+
+    gem install terminal-notifier
