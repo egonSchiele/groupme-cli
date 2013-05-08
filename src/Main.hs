@@ -40,6 +40,7 @@ notifyAndPrint notifyMe msg = do
             run_ "terminal-notifier"  ["-message", TL.pack . show $ text_]
           return ()
     putStrLn . highlightPushMsg notifyMe $ msg
+    appendFile "chatlog" ((maybe "" id (pmsgUserName msg)) ++ ": " ++ (maybe "" id (pmsgText msg)) ++ "\n")
 
 printGroups tok = do
     grps <- groups tok

@@ -53,12 +53,9 @@ handshake userId groupId token = do
     let clientId = T.unpack . unwrapString $ res1_ ! "clientId"
 
     now <- getPOSIXTime
-{- Don't need to subscribe to the user's channel, that will just give us
-- msgs from ALL groups.
     -- Step #2 (part 1)
     let subscribeUser = Subscribe "/meta/subscribe" clientId ("/user/" ++ (show userId)) 2 (Ext token (round now))
     body3 <- sendJSON . LBS.unpack . encode $ [subscribeUser]
--}
 
     -- Step #2 (part 2)
     let subscribeGroup = Subscribe "/meta/subscribe" clientId ("/group/" ++ (show groupId)) 3 (Ext token (round now))

@@ -1,5 +1,6 @@
 {-# Language OverloadedStrings, ScopedTypeVariables #-}
 module GroupMe where
+import Control.Concurrent  
 import Language.Haskell.HsColour.ANSI  
 import Network.HTTP.Wget
 import Network.Curl
@@ -194,7 +195,9 @@ readMessages clientid func = do
           let _msg = unwrapResult . fromJSON $ result !! 1 :: Maybe PushMessage
           case _msg of
             Nothing -> return ()
-            (Just msg) -> liftIO $ func msg
+            (Just msg) -> liftIO $ do
+              forkIO $ func msg
+              return ()
     return "done!"
 
 extractFromResponse :: FromJSON a => String -> (Value -> Value) -> IO (Maybe a)
