@@ -22,7 +22,7 @@ unwrapString (String s) = s
 (!) (Object v) key = v M.! key
 
 sendJSON :: String -> IO CurlResponse
-sendJSON data_ = sendJSONToUrl "http://push.groupme.com/faye" Nothing data_
+sendJSON data_ = sendJSONToUrl "https://push.groupme.com/faye" Nothing data_
 
 sendJSONToUrl :: String -> Maybe String -> String -> IO CurlResponse
 sendJSONToUrl url token data_ = do

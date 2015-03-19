@@ -3,6 +3,7 @@ module GroupMe where
 import Control.Concurrent  
 import Language.Haskell.HsColour.ANSI  
 import qualified Network.HTTP as HTTP
+import qualified Network.HTTP.Conduit as Conduit
 import Network.Curl
 import Data.Aeson
 import Control.Applicative
@@ -208,15 +209,15 @@ extractFromResponse body func = do
       (Just res) -> return . unwrapResult . fromJSON . func $ res
 
 base :: String
-base = "http://api.groupme.com/v3"
+base = "https://api.groupme.com/v3"
 
 api path token = apiParams path token []
 
 apiParams :: String -> String -> [(String, Maybe String)] -> IO String
 apiParams path token params = do
     let pairs = (mapMaybe concatParams $ [("token", Just token)] ++ params)
-    rsp <- HTTP.simpleHTTP (HTTP.getRequest $ base ++ path ++ "?" ++ (urlEncodePairs pairs))
-    HTTP.getResponseBody rsp
+    rsp <- Conduit.simpleHttp (base ++ path ++ "?" ++ (urlEncodePairs pairs))
+    return $ LBS.unpack rsp
 
 urlEncodePairs :: [(String, String)] -> String
 urlEncodePairs = intercalate "&" . map urlEncodePair

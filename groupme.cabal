@@ -33,5 +33,6 @@ executable groupme
                        uuid,
                        shelly,
                        cmdargs,
-                       HTTP
+                       HTTP,
+                       http-conduit
   ghc-options: -threaded -rtsopts
