@@ -16,6 +16,7 @@ import Shelly
 import System.Environment
 import System.Console.CmdArgs
 import Data.IORef
+import System.IO
 
 data Args = Args { token :: String, user_id :: Int, group_id :: Int, list_groups :: Bool, about_me :: Bool, notification :: String, debug :: Bool } deriving (Show, Data, Typeable)
 
@@ -39,10 +40,12 @@ notifyAndPrint notifyMe msg = do
       Just text_ -> do
         when (text_ `match` notifyMe) $ do
           shelly . silently $ do
-            run_ "terminal-notifier"  ["-message", TL.pack . show $ text_]
+            return ()
+            -- run_ "terminal-notifier"  ["-message", TL.pack . show $ text_]
           return ()
     putStrLn . highlightPushMsg notifyMe $ msg
-    appendFile "chatlog" ((maybe "" id (pmsgUserName msg)) ++ ": " ++ (maybe "" id (pmsgText msg)) ++ "\n")
+    hFlush stdout
+    appendFile "/root/chatlog" ((maybe "" id (pmsgUserName msg)) ++ ": " ++ (maybe "" id (pmsgText msg)) ++ "\n")
 
 printGroups tok = do
     grps <- groups tok
@@ -90,3 +93,4 @@ runProgram tok uid gid notifyMe = do
       input <- getLine
       resp <- sendMessage tok gid input
       print . respStatus $ resp
+      hFlush stdout

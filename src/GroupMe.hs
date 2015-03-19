@@ -221,6 +221,7 @@ apiParams path token params = do
     let path_ = (base ++ path ++ "?" ++ (urlEncodePairs pairs))
     when debug_ $ do
       putStrLn path_
+      print pairs
     rsp <- Conduit.simpleHttp path_
     return $ LBS.unpack rsp
 
@@ -242,8 +243,15 @@ groups token = do
 
 messages :: String -> Int -> Maybe Int -> Maybe Int -> IO (Maybe [Message])
 messages token group_id before_id since_id = do
-    body <- apiParams ("/groups/" ++ (show group_id) ++ "/messages") token [("before_id", show <$> before_id), ("since_id", show <$> since_id)]
+    body <- apiParams ("/groups/" ++ (show group_id) ++ "/messages") token [("before_id", maybeShow $ makeMin <$> before_id), ("since_id", show <$> since_id)]
     extractFromResponse body $ \res -> res ! "response" ! "messages"
+
+makeMin :: Int -> Maybe Int
+makeMin i = if i < 0 then Nothing else Just i
+
+maybeShow Nothing = Nothing
+maybeShow (Just Nothing) = Nothing
+maybeShow (Just x) = Just (show x)
 
 preloadMessages :: String -> Int -> Int -> IO [Message]
 preloadMessages token group_id count = _preloadMessages token group_id count [] Nothing
