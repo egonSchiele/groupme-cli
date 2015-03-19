@@ -1,8 +1,6 @@
 {-# Language OverloadedStrings, ScopedTypeVariables #-}
 
 module GroupMe.Utils where
-import Text.Regex
-import qualified Text.Regex.PCRE as R
 import Data.Char
 import Data.Aeson
 import qualified Data.HashMap.Strict as M
@@ -50,4 +48,4 @@ dim = highlight [Dim]
 
 -- case insensitive match
 match :: String -> String -> Bool
-match str1 str2 = (map toLower str1) R.=~ (map toLower str2)
+match str1 str2 = (map toLower str2) `elem` (map toLower str1)

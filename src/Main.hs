@@ -23,7 +23,7 @@ pargs = Args { token = "" &= help "Your access token (get this from http://dev.g
               group_id = def &= help "The id for the group you want to join (if you dont know it, run -l)",
               list_groups = False &= help "list all the groups you belong to",
               about_me = False &= help "information about yourself",
-              notification = "^$" &= help "If a message matches this regex you will get notified"
+              notification = "^$" &= help "If a message includes this, you will get notified"
 } &= summary "Simple groupme command line client"
 
 -- For this to wor you need to install terminal-notifier:
