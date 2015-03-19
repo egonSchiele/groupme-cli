@@ -9,6 +9,10 @@ import Language.Haskell.HsColour.ANSI
 import Control.Monad
 import Data.Maybe
 import qualified Data.Text as T
+import Data.IORef
+import System.IO.Unsafe
+
+($=) ref val = modifyIORef ref (const val)
 
 unwrapResult (Success a) = Just a
 unwrapResult _ = Nothing
@@ -53,3 +57,6 @@ match str1 str2 = matches /= [s2]
     where s1 = T.pack $ map toLower str1
           s2 = T.pack $ map toLower str2
           matches = T.splitOn s2 s1
+
+debugMode :: IORef Bool
+debugMode = unsafePerformIO $ newIORef False

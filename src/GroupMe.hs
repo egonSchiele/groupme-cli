@@ -20,6 +20,7 @@ import Data.Maybe
 import Data.List
 import Data.UUID.V4
 import qualified Data.Map as M
+import Data.IORef
 
 data Group = Group { createdAt :: Int,
                      creatorUserId :: Int,
@@ -215,8 +216,12 @@ api path token = apiParams path token []
 
 apiParams :: String -> String -> [(String, Maybe String)] -> IO String
 apiParams path token params = do
+    debug_ <- readIORef debugMode
     let pairs = (mapMaybe concatParams $ [("token", Just token)] ++ params)
-    rsp <- Conduit.simpleHttp (base ++ path ++ "?" ++ (urlEncodePairs pairs))
+    let path_ = (base ++ path ++ "?" ++ (urlEncodePairs pairs))
+    when debug_ $ do
+      putStrLn path_
+    rsp <- Conduit.simpleHttp path_
     return $ LBS.unpack rsp
 
 urlEncodePairs :: [(String, String)] -> String
