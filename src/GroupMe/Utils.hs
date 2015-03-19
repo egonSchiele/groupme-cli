@@ -8,6 +8,7 @@ import Network.Curl
 import Language.Haskell.HsColour.ANSI
 import Control.Monad
 import Data.Maybe
+import qualified Data.Text as T
 
 unwrapResult (Success a) = Just a
 unwrapResult _ = Nothing
@@ -21,7 +22,7 @@ unwrapString (String s) = s
 (!) (Object v) key = v M.! key
 
 sendJSON :: String -> IO CurlResponse
-sendJSON data_ = sendJSONToUrl "https://push.groupme.com/faye" Nothing data_
+sendJSON data_ = sendJSONToUrl "http://push.groupme.com/faye" Nothing data_
 
 sendJSONToUrl :: String -> Maybe String -> String -> IO CurlResponse
 sendJSONToUrl url token data_ = do
@@ -48,4 +49,7 @@ dim = highlight [Dim]
 
 -- case insensitive match
 match :: String -> String -> Bool
-match str1 str2 = (map toLower str2) `elem` (map toLower str1)
+match str1 str2 = matches /= [s2]
+    where s1 = T.pack $ map toLower str1
+          s2 = T.pack $ map toLower str2
+          matches = T.splitOn s2 s1

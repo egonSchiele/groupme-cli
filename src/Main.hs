@@ -1,7 +1,7 @@
 {-# Language OverloadedStrings, ScopedTypeVariables, DeriveDataTypeable #-}
 -- import Control.Concurrent.Async
 import Data.Monoid
-import qualified Data.Text.Lazy as TL
+import qualified Data.Text as TL
 import Network.Curl
 import GroupMe
 import GroupMe.Handshake
@@ -45,8 +45,8 @@ notifyAndPrint notifyMe msg = do
 printGroups tok = do
     grps <- groups tok
     case grps of
-      Nothing -> putStrLn "Error parsing response from groupme"
-      Just groups_ -> mapM_ (\grp -> print grp >> putStrLn "") groups_
+      Left str -> putStrLn $ "Error parsing response from groupme: " ++ str
+      Right groups_ -> mapM_ (\grp -> print grp >> putStrLn "") groups_
 
 printMe tok = do
     me_ <- me tok

@@ -3,7 +3,6 @@
 module GroupMe.Handshake where
 import GroupMe.Utils
 import Data.Aeson
-import Network.HTTP.Wget
 import Network.Curl
 import Data.Time.Clock.POSIX
 import Control.Applicative

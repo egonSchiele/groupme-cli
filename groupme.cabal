@@ -19,7 +19,6 @@ executable groupme
   main-is: Main.hs
   -- other-modules:       
   build-depends:       base ==4.5.*,
-                       http-wget,
                        aeson,
                        bytestring,
                        text,
@@ -33,5 +32,6 @@ executable groupme
                        hscolour,
                        uuid,
                        shelly,
-                       cmdargs
+                       cmdargs,
+                       HTTP
   ghc-options: -threaded -rtsopts

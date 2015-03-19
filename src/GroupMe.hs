@@ -2,7 +2,7 @@
 module GroupMe where
 import Control.Concurrent  
 import Language.Haskell.HsColour.ANSI  
-import Network.HTTP.Wget
+import qualified Network.HTTP as HTTP
 import Network.Curl
 import Data.Aeson
 import Control.Applicative
@@ -208,22 +208,31 @@ extractFromResponse body func = do
       (Just res) -> return . unwrapResult . fromJSON . func $ res
 
 base :: String
-base = "https://api.groupme.com/v3"
+base = "http://api.groupme.com/v3"
 
 api path token = apiParams path token []
 
 apiParams :: String -> String -> [(String, Maybe String)] -> IO String
-apiParams path token params = wget (base ++ path) (mapMaybe concatParams $ [("token", Just token)] ++ params) []
+apiParams path token params = do
+    let pairs = (mapMaybe concatParams $ [("token", Just token)] ++ params)
+    rsp <- HTTP.simpleHTTP (HTTP.getRequest $ base ++ path ++ "?" ++ (urlEncodePairs pairs))
+    HTTP.getResponseBody rsp
+
+urlEncodePairs :: [(String, String)] -> String
+urlEncodePairs = intercalate "&" . map urlEncodePair
+
+urlEncodePair :: (String, String) -> String
+urlEncodePair (x, y) = HTTP.urlEncode x ++ '=' : HTTP.urlEncode y
 
 concatParams (key, (Just val)) = Just (key, val)
 concatParams (key, Nothing) = Nothing
 
-groups :: String -> IO (Maybe [Group])
+groups :: String -> IO (Either String [Group])
 groups token = do
     body <- api "/groups" token
     -- body <- readFile "data.json"
     let body_ = encodeUtf8 $ decodeUtf8With lenientDecode (BS.pack body)
-    return $ (responseGroup <$> (decode . LBS.pack . BS.unpack $ body_ :: Maybe Response))
+    return $ (responseGroup <$> (eitherDecode . LBS.pack . BS.unpack $ body_ :: Either String Response))
 
 messages :: String -> Int -> Maybe Int -> Maybe Int -> IO (Maybe [Message])
 messages token group_id before_id since_id = do
