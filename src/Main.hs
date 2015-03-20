@@ -87,10 +87,11 @@ runProgram tok uid gid notifyMe = do
       otherwise -> mapM_ (putStrLn . highlightMsg notifyMe) $ reverse msgs
 
     -- And now we can read messages!
-    forkIO $ runStateT (readMessages clientId (notifyAndPrint notifyMe)) 4 >> return ()
-    forever $ do
-      putStr "> "
-      input <- getLine
-      resp <- sendMessage tok gid input
-      print . respStatus $ resp
-      hFlush stdout
+    runStateT (readMessages clientId (notifyAndPrint notifyMe)) 4 >> return ()
+    -- forkIO $ runStateT (readMessages clientId (notifyAndPrint notifyMe)) 4 >> return ()
+    -- forever $ do
+    --   putStr "> "
+    --   input <- getLine
+    --   resp <- sendMessage tok gid input
+    --   print . respStatus $ resp
+    --   hFlush stdout
