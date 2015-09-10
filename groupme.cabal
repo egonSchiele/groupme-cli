@@ -34,5 +34,7 @@ executable groupme
                        shelly,
                        cmdargs,
                        HTTP,
-                       http-conduit
+                       http-conduit,
+                       directory,
+                       filepath
   ghc-options: -threaded -rtsopts
