@@ -12,11 +12,13 @@ import Data.Maybe
 import Control.Applicative
 import GroupMe.Utils
 import Control.Concurrent
-import Shelly
+import Shelly hiding (FilePath)
 import System.Environment
 import System.Console.CmdArgs
 import Data.IORef
 import System.IO
+import System.Directory
+import System.FilePath
 
 data Args = Args { token :: String, user_id :: Int, group_id :: Int, list_groups :: Bool, about_me :: Bool, notification :: String, debug :: Bool } deriving (Show, Data, Typeable)
 
@@ -45,7 +47,8 @@ notifyAndPrint notifyMe msg = do
           return ()
     putStrLn . highlightPushMsg notifyMe $ msg
     hFlush stdout
-    appendFile "/root/chatlog" ((maybe "" id (pmsgUserName msg)) ++ ": " ++ (maybe "" id (pmsgText msg)) ++ "\n")
+    appDir <- getAppUserDataDirectory "groupme-cli"
+    appendFile (joinPath [appDir, "/chatlog"]) ((maybe "" id (pmsgUserName msg)) ++ ": " ++ (maybe "" id (pmsgText msg)) ++ "\n")
 
 printGroups tok = do
     grps <- groups tok
